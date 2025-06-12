@@ -1,0 +1,56 @@
+<div class="ms-sm-3 header-item topbar-user header-profile-main-drow dropdown">
+  <button
+    type="button"
+    aria-haspopup="true"
+    class="btn sn-profile-droup-down-icon"
+    aria-expanded="false"
+  >
+    <span class="d-flex align-items-center"
+      ><img
+        class="rounded-circle header-profile-user"
+        src="/static/media/sales-ninja-icon.7cd860288a0226b54eff.png"
+        height="32"
+        alt="Header Avatar" /><span
+        class="text-start ms-xl-2 sn-top-profile-top"
+        ><div>
+          <span
+            class="d-none d-xl-inline-block ms-1 fw-medium user-name-text"
+            style="text-transform: capitalize"
+            >Redvision</span
+          ><span
+            class="d-none d-xl-block ms-1 fs-12 fw-bold text-muted user-name-sub-text sn-profile-name-main-sn"
+            ><span>RED-3064-6971</span></span
+          >
+        </div></span
+      >
+      <div class="sn-down-arrow-top">
+        <div class="sn-profile-down-hover">
+          <i class="ri-arrow-down-s-line"></i>
+        </div></div
+    ></span>
+  </button>
+  <div
+    tabindex="-1"
+    role="menu"
+    aria-hidden="true"
+    class="dropdown-menu-end dropdown-menu"
+    data-bs-popper="static"
+  >
+    <h6 class="dropdown-header">
+      Welcome <span style="text-transform: capitalize">Redvision</span>
+    </h6>
+    <a href="/profile" tabindex="0" role="menuitem" class="dropdown-item"
+      ><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i
+      ><span class="align-middle">Profile</span></a
+    >
+    <div class="dropdown-divider"></div>
+    <button type="button" tabindex="0" role="menuitem" class="dropdown-item">
+      <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
+      <span class="align-middle" data-key="t-logout">Logout</span>
+    </button>
+  </div>
+</div>
+<div class="ms-sm-3 header-item topbar-user header-profile-main-drow dropdown show">flex
+
+
+

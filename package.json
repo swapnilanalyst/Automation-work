@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "@badeball/cypress-configuration": "^3.0.0",
+    "@shelex/cypress-allure-plugin": "^2.41.2",
+    "allure-commandline": "^2.34.0",
+    "browserify": "^17.0.1",
+    "cypress": "^14.3.3",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "cypress-multi-reporters": "^1.6.4",
+    "cypress-xpath": "^2.0.1"
+  }
+}
