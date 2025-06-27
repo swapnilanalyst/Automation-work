@@ -96,13 +96,13 @@ describe('Sales Ninja - Registration Page Test Cases', () => {
 });
 
 
-//   it('TC_12 - Website URL Validation (Optional but Should Validate if Filled)', () => {
-//   cy.get("input[placeholder='Enter Website Url.']").type('invalidurl');
-//   cy.contains('Sign Up').click();
+  it('TC_12 - Website URL Validation (Optional but Should Validate if Filled)', () => {
+  cy.get("input[placeholder='Enter Website Url.']").type('invalidurl');
+  cy.contains('Sign Up').click();
 
-//   // Ideally this should exist in the future
-//   cy.contains('Please enter a valid website URL').should('exist'); // May fail if not implemented yet
-// });
+  // Ideally this should exist in the future
+  cy.contains('Please enter a valid website URL').should('exist'); // May fail if not implemented yet
+});
 
 
   it('TC_13 - Terms & Conditions Checkbox', () => {
@@ -123,7 +123,7 @@ describe('Sales Ninja - Registration Page Test Cases', () => {
 
   it('TC_14 - Successful Registration', () => {
     const timestamp = Date.now();
-    const email = `user${timestamp}@testmail.com`;
+    const email = `user${timestamp}@mailinator.com`;
 
     cy.get("input[placeholder='Enter name']").type('John Doe');
     cy.get("input[placeholder='Enter email address']").type(email);
