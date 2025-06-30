@@ -476,7 +476,7 @@ class ProfilePage {
 
     // 🔄 Update editable fields
     const updatedData = {
-      employeeName: "New Employee Test",
+      employeeName: "Pulkit Soni dev",
     };
     cy.get('input[placeholder="Enter Employee Name"]').clear().type(updatedData.employeeName);
 
@@ -490,9 +490,53 @@ class ProfilePage {
 
     //Assertion for New value updated
     cy.get('#organizationname').invoke('text').should('eq',updatedData.employeeName);
-
-
   }
+
+  //Check profile picture funtionality
+  /**
+   * 📤 Upload profile picture from /fixtures folder
+   * @param {string} imagePath - File name inside fixtures (default: SamplePNGImage_3mbmb.png)
+   */
+  //Upload Profile Picture
+  verifyUploadProfilePicture(imagePath = 'SamplePNGImage_3mbmb.png'){
+    cy.get('#profile-img-file-input').should('exist')
+    .selectFile(`fixtures/${imagePath}`, {force: true});
+    // cy.wait(5000)
+
+    //verify sucessfully uploaded message
+    cy.get('.Toastify__toast--success', {timeout:10000}).should('be.visible')
+    .and('contain.text', 'Profile picture has been successfully updated.');
+  }
+
+  verifyRemoveProfilePicture(){
+
+    cy.intercept('DELETE', /.*\/delete-profile[-]?image$/, (req) => {
+  req.alias = 'deleteProfileImage';});
+    
+    cy.get('.sn-profile-avatar-pic').should('exist')
+    .click({force: true});
+
+    //Asserstion for sucess message
+    // cy.wait(2000)
+    cy.wait('@deleteProfileImage').then((interception)=>{
+      const response = interception.response;
+
+      if(response.statuscode === 200 && response.body.sucess && response.body.message.includes('image profile deleted')){
+        console.log('Profile Image Removed Sucessfully');
+        cy.get('.Toastify__toast--success').should('be.visible')
+        .and('contain.text', 'image profile deleted')
+      }else if(response.statuscode ===400 && response.body.message.includes('Image profile does not exist')){
+        console.log('No profile image to remove: '+ response.body.message);
+        expect(response.body.message).to.includes('not exist');
+      }
+      // else{
+      //   throw new Error(`❌ Unexpected response: ${JSON.stringify(response.body.message)}`);
+        
+      // }
+
+    })
+  }
+
 }
 
 export default new ProfilePage();
