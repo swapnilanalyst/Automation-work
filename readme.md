@@ -46,3 +46,6 @@ git add utils/helpers.js(utils/helper that this this file newly added so wheneve
 git commit -m "profile script completed"
 git push origin 
 git add .gitignore
+
+
+git log
