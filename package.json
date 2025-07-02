@@ -8,5 +8,8 @@
     "cypress-mochawesome-reporter": "^3.8.2",
     "cypress-multi-reporters": "^1.6.4",
     "cypress-xpath": "^2.0.1"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.8.0"
   }
 }

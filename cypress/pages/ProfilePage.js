@@ -2,6 +2,7 @@
 import LoginPage from "./LoginPage";
 import DashboardPage from "./Dashboard";
 import { helpers, safeSelectByLabel } from "../../utils/helpers";
+import { testData } from "../support/testData";
 
 class ProfilePage {
   openProfileFromHeader() {
@@ -384,112 +385,136 @@ class ProfilePage {
     cy.url().should("include", "/update/personal");
 
     // 👀 Check if Email field is disabled or read-only
-    cy.get('input[placeholder="Enter Email"]')
+    cy.get('form[action="#"] input[name="email"]')
       .should("be.visible")
       .and("be.disabled"); // OR use .and('be.disabled') based on actual HTML
 
-    // 🔄 Update editable fields
-    const updatedData = {
-      orgName: "Redvision Dev",
-      contactCode: "India",
-      countryCode1: "+91",
-      contactNumber: "9999988888",
-      pincode: "400001",
-      country: "India",
-      city: "Mumbai",
-      state: "MH",
-      industry: "Finance",
-      website: "https://salesninja.ai",
-    };
-    cy.intercept("GET", "**/get-organization-profile").as("getOrgProfile");
-    cy.wait("@getOrgProfile");
+    // 🔄 Update editable fields data from fixture file(for static data)
+    cy.fixture("profileData").then((data) => {
+      const updatedData = data.admin;
 
-    cy.get('input[placeholder="Enter Organization Name"]')
-      .clear({ force: true })
-      .type(updatedData.orgName);
+      ////Update data from support/testdata file(for dynamic data)
+      // const updatedData = testData.admin;
 
-    // Open dropdown
-    cy.get(".selected-flag > .flag").click(); // ensure open
-    cy.get(".country-list .search-box", { timeout: 5000 })
-      .should("be.visible")
-      .type(updatedData.contactCode);
-    cy.get(".country-list .country")
-      .contains(".country-name", /^India$/)
-      .parents(".country")
-      .click({ force: true });
+      cy.intercept("GET", "**/get-organization-profile").as("getOrgProfile");
+      cy.wait("@getOrgProfile");
+      cy.wait(5000);
+      // cy.reactClearAndType("input[placeholder='Enter Organization Name']", updatedData.orgName);
 
-    // Step 2: Type actual phone number
-    cy.get('.react-tel-input input[type="tel"]')
-      .clear()
-      .type(updatedData.contactNumber);
+      cy.get('form[action="#"] input[name="organizationName"]')
+        .clear({ force: true })
+        .should("have.value", "")
+        .type(updatedData.orgName, { delay: 100 })
+        .should("have.value", updatedData.orgName);
 
-    cy.get("input[placeholder='Enter postal No...']")
-      .clear()
-      .type(updatedData.pincode);
+      // // ✅ Step 1: Open country dropdown
+      // cy.get(".selected-flag").click();
 
-    helpers.safeSelectByLabel("Select Country", updatedData.country);
+      // // ✅ Step 2: Search country in list
+      // cy.get(".country-list .search-box").clear().type(updatedData.contactCode); // e.g., "India"
 
-    cy.get("input[placeholder='Search city...']")
-      .clear()
-      .type(updatedData.city);
+      // // ✅ Step 3: Wait & select exact country
+      // cy.get(".country-list .country")
+      //   .should("be.visible")
+      //   .contains(
+      //     ".country-name",
+      //     new RegExp(`^${updatedData.contactCode}$`, "i")
+      //   ) // Match exact name
+      //   .click({ force: true });
 
-    cy.get("input[placeholder='Enter State Name...']")
-      .clear()
-      .type(updatedData.state);
+      // // ✅ Step 4: Type phone number (force Formik sync)
+      // cy.get('.react-tel-input input[type="tel"]')
+      //   .clear({ force: true })
+      //   .type(updatedData.contactNumber, { delay: 100 })
+      //   .trigger("input")
+      //   .trigger("change", { force: true })
+      //   .blur();
 
-    helpers.safeSelectByLabel("Industry Type", updatedData.industry);
-    cy.get("#industryType")
-      .find("option:selected")
-      .invoke("text")
-      .then((val) => cy.log("✅ Selected Industry:", val));
+      cy.get('form[action="#"] input[name="pincode"]')
+        .clear()
+        .type(updatedData.pincode);
 
-    cy.get("input[name='website']").clear().type(updatedData.website);
+      helpers.safeSelectByLabel("Select Country", updatedData.country);
 
-    // 💾 Submit
-    cy.xpath("//button[normalize-space()='Update']").click();
+      cy.get('form[action="#"] input[name="city"]')
+        .clear()
+        .type(updatedData.city);
 
-    // ✅ Check toast
-    cy.get(".Toastify__toast--success", { timeout: 10000 })
-      .should("be.visible")
-      .and("contain.text", "profile upadated successfully");
-    cy.wait(2000);
+      cy.get('form[action="#"] input[name="stateData"]')
+        .clear()
+        .type(updatedData.state);
 
-    //   // 🔍 Verify updated values reflect in profile DOM
-    cy.get("#organizationname").invoke("text").should("eq", updatedData.orgName);
-    cy.get("#zipcodeInput").should("contain.text", updatedData.countryCode1);
-    cy.get("#mobilenumberInput").should("contain.text",updatedData.contactNumber);
-    cy.get("#pincodeInput").should("contain.text", updatedData.pincode);
-    cy.get("#countryInput").should("contain.text", updatedData.country);
-    cy.get("#cityInput").should("contain.text", updatedData.city);
-    cy.get("#state").should("contain.text", updatedData.state);
-    cy.get("#Industryinput").should("contain.text", updatedData.industry);
-    cy.get("#webInput").should("contain.text", updatedData.website);
+      helpers.safeSelectByLabel("Industry Type", updatedData.industry);
+      cy.get('form[action="#"] select[id="industryType"]')
+        .find("option:selected")
+        .invoke("text")
+        .then((val) => cy.log("✅ Selected Industry:", val));
+
+      cy.get('form[action="#"] input[name="website"]')
+        .clear()
+        .type(updatedData.website);
+
+      // 💾 Submit
+      cy.xpath("//button[normalize-space()='Update']").click();
+
+      // ✅ Check toast
+      cy.get(".Toastify__toast--success", { timeout: 10000 })
+        .should("be.visible")
+        .and("contain.text", "profile upadated successfully");
+
+      cy.wait(3000);
+
+      cy.intercept("GET", "**/get-organization-profile").as("getOrgProfile");
+      cy.wait("@getOrgProfile");
+
+      //   // 🔍 Verify updated values reflect in profile DOM
+      cy.get("#organizationname").invoke("text").should("eq", updatedData.orgName);
+      cy.get("#zipcodeInput").should("contain.text", updatedData.countryCode1);
+      // cy.get("#mobilenumberInput").should("contain.text",updatedData.contactNumber );
+      cy.get("#pincodeInput").should("contain.text", updatedData.pincode);
+      cy.get("#countryInput").should("contain.text", updatedData.country);
+      cy.get("#cityInput").should("contain.text", updatedData.city);
+      cy.get("#state").should("contain.text", updatedData.state);
+      cy.get("#Industryinput").should("contain.text", updatedData.industry);
+      cy.get("#webInput").should("contain.text", updatedData.website);
+    });
   }
 
   verifyEmployeeProfileUpdate() {
     cy.xpath("//button[normalize-space()='Update']").click();
     cy.contains("Personal").should("be.visible");
     cy.url().should("include", "/update/personal");
+    cy.wait(3000);
 
     // 👀 Check if Email field is disabled or read-only
-    cy.get('input[placeholder="Enter Email"]').should("be.visible").and("be.disabled"); // OR use .and('be.disabled') based on actual HTML
-
-    // 🔄 Update editable fields
-    const updatedData = {
-      employeeName: "Pulkit Soni dev",
-    };
-    cy.get('input[placeholder="Enter Employee Name"]').clear().type(updatedData.employeeName);
-
-    cy.xpath("//button[normalize-space(text())='Update']").click();
-
-    cy.get(".Toastify__toast--success", { timeout: 10000 })
+    cy.get('form[action="#"] input[name="email"]')
       .should("be.visible")
-      .and("contain.text", "Employee details updated successfully.");
-      
-    cy.wait(2000);
+      .and("be.disabled"); // OR use .and('be.disabled') based on actual HTML
 
-    //Assertion for New value updated
-    cy.get('#organizationname').invoke('text').should('eq',updatedData.employeeName);
+    // 🔄 Update editable fields data from fixture file(for static data)
+    cy.fixture("profileData").then((data) => {
+      const updatedData = data.employee;
+
+      // 🔄 Update editable fields
+      // const updatedData = testData.employee;
+
+      cy.get('form[action="#"] input[name="fullName"]')
+        .clear()
+        .type(updatedData.employeeName);
+
+      cy.xpath("//button[normalize-space(text())='Update']").click();
+
+      cy.get(".Toastify__toast--success", { timeout: 10000 })
+        .should("be.visible")
+        .and("contain.text", "Employee details updated successfully.");
+
+      cy.wait(2000);
+
+      //Assertion for New value updated
+      cy.get("#organizationname")
+        .invoke("text")
+        .should("eq", updatedData.employeeName);
+    });
   }
 
   //Check profile picture funtionality
@@ -498,45 +523,50 @@ class ProfilePage {
    * @param {string} imagePath - File name inside fixtures (default: SamplePNGImage_3mbmb.png)
    */
   //Upload Profile Picture
-  verifyUploadProfilePicture(imagePath = 'SamplePNGImage_3mbmb.png'){
-    cy.get('#profile-img-file-input').should('exist')
-    .selectFile(`fixtures/${imagePath}`, {force: true});
-    // cy.wait(5000)
+  verifyUploadProfilePicture(imagePath = "SamplePNGImage_3mbmb.png") {
+    cy.wait(3000);
+    cy.get("#profile-img-file-input")
+      .should("exist")
+      .selectFile(`cypress/fixtures/${imagePath}`, { force: true });
 
-    //verify sucessfully uploaded message
-    cy.get('.Toastify__toast--success', {timeout:10000}).should('be.visible')
-    .and('contain.text', 'Profile picture has been successfully updated.');
+    cy.get(".Toastify__toast--success", { timeout: 10000 })
+      .should("be.visible")
+      .and("contain.text", "Profile picture has been successfully updated.");
   }
 
-  verifyRemoveProfilePicture(){
+  verifyRemoveProfilePicture() {
+    cy.intercept("DELETE", /.*\/delete-profile[-]?image$/, (req) => {
+      req.alias = "deleteProfileImage";
+    });
 
-    cy.intercept('DELETE', /.*\/delete-profile[-]?image$/, (req) => {
-  req.alias = 'deleteProfileImage';});
-    
-    cy.get('.sn-profile-avatar-pic').should('exist')
-    .click({force: true});
+    cy.get(".sn-profile-avatar-pic").should("exist").click({ force: true });
 
     //Asserstion for sucess message
     // cy.wait(2000)
-    cy.wait('@deleteProfileImage').then((interception)=>{
+    cy.wait("@deleteProfileImage").then((interception) => {
       const response = interception.response;
 
-      if(response.statuscode === 200 && response.body.sucess && response.body.message.includes('image profile deleted')){
-        console.log('Profile Image Removed Sucessfully');
-        cy.get('.Toastify__toast--success').should('be.visible')
-        .and('contain.text', 'image profile deleted')
-      }else if(response.statuscode ===400 && response.body.message.includes('Image profile does not exist')){
-        console.log('No profile image to remove: '+ response.body.message);
-        expect(response.body.message).to.includes('not exist');
+      if (
+        response.statuscode === 200 &&
+        response.body.sucess &&
+        response.body.message.includes("image profile deleted")
+      ) {
+        console.log("Profile Image Removed Sucessfully");
+        cy.get(".Toastify__toast--success")
+          .should("be.visible")
+          .and("contain.text", "image profile deleted");
+      } else if (
+        response.statuscode === 400 &&
+        response.body.message.includes("Image profile does not exist")
+      ) {
+        console.log("No profile image to remove: " + response.body.message);
+        expect(response.body.message).to.includes("not exist");
       }
       // else{
       //   throw new Error(`❌ Unexpected response: ${JSON.stringify(response.body.message)}`);
-        
       // }
-
-    })
+    });
   }
-
 }
 
 export default new ProfilePage();

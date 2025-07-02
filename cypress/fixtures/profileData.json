@@ -1,0 +1,17 @@
+{
+  "admin": {
+    "orgName": "Redvision Dev",
+    "contactCode": "India",
+    "countryCode1": "+91",
+    "contactNumber": "7999988888",
+    "pincode": "452010",
+    "country": "India",
+    "city": "Indore",
+    "state": "MP",
+    "industry": "IT/ITES",
+    "website": "https://salesninjacrm.com/"
+  },
+  "employee": {
+    "employeeName": "Pulkit Soni dev"
+  }
+}

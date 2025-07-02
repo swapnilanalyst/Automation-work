@@ -37,3 +37,12 @@ choco install allure
 cd path/to/allure-report
 # or
 npx allure open .
+
+
+#1. git process:- 
+git staus
+git add cypress
+git add utils/helpers.js(utils/helper that this this file newly added so whenever add a new file we can add like this git add and file name)
+git commit -m "profile script completed"
+git push origin 
+git add .gitignore
