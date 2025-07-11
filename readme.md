@@ -47,5 +47,85 @@ git commit -m "profile script completed"
 git push origin 
 git add .gitignore
 
+# -------------------------------
+# 🔍 Status & Information
+# -------------------------------
+git status                # Check current changes and branch
+git branch                # List all local branches
+git log                   # Show commit history
+git log --oneline         # Compact commit log
+git diff                  # Show unstaged changes
+git diff --cached         # Show staged changes
 
-git log
+# -------------------------------
+# 🔄 Working with Branches
+# -------------------------------
+git checkout -b feature-name       # Create & switch to new branch
+git checkout main                  # Switch to main branch
+git branch -d feature-name         # Delete local branch
+git push origin --delete feature-name   # Delete remote branch
+
+# -------------------------------
+# 💾 Saving Changes
+# -------------------------------
+git add .                          # Stage all changes
+git add filename.js                # Stage specific file
+git commit -m "Message"            # Commit staged changes
+git push                           # Push to current branch
+git push origin branch-name        # Push to specific remote branch
+
+# -------------------------------
+# 🔁 Syncing with Remote
+# -------------------------------
+git pull origin main               # Pull latest changes
+git fetch                          # Download changes (no merge)
+git fetch origin                   # Fetch from specific remote
+git rebase origin/main             # Rebase current branch onto latest main
+
+# -------------------------------
+# 🔀 Merge & Conflict Handling
+# -------------------------------
+git merge branch-name              # Merge into current branch
+git merge --abort                  # Cancel a merge in progress
+git add .                          # Stage after resolving conflicts
+git commit -m "Resolve conflict"   # Commit resolved merge
+
+# -------------------------------
+# 📦 Stashing Work
+# -------------------------------
+git stash                          # Save changes temporarily
+git stash list                     # View stashed changes
+git stash pop                      # Apply and remove last stash
+git stash clear                    # Clear all stashed items
+
+# -------------------------------
+# 🧹 Undoing Mistakes
+# -------------------------------
+git checkout -- file.js            # Discard changes in file
+git reset HEAD file.js             # Unstage a file
+git reset --hard HEAD              # Reset all changes (⚠️ permanent)
+git clean -fd                      # Remove untracked files & folders
+
+# -------------------------------
+# 🌐 Remote Management
+# -------------------------------
+git remote -v                      # Show remotes
+git remote add origin <url>        # Add new remote
+git remote set-url origin <url>    # Change remote URL
+
+# -------------------------------
+# 📥 Merge Feature Branch into Main (Standard Flow)
+# -------------------------------
+git add .
+git commit -m "WIP or stash if needed"
+git stash                          # if not committing
+git checkout main
+git pull origin main
+git merge profile-page-completion
+git add .                          # if conflict resolved
+git commit -m "Resolved conflicts"
+git push origin main
+git stash pop                      # if stash used
+git branch -d profile-page-completion
+git push origin --delete profile-page-completion
+

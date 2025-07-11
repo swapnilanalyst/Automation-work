@@ -13,6 +13,7 @@ Cypress.Commands.add('loginWithRole', (env, role) => {
     const { email, password } = credentials
   
     cy.visit('/login')
+    cy.wait(3000)
     if (role.toLowerCase().includes('admin')) {
       cy.get('.nav-tabs-custom .nav-link').eq(0).click()
     } else {
@@ -20,9 +21,16 @@ Cypress.Commands.add('loginWithRole', (env, role) => {
     }
   
     cy.get('input[name="email"]').filter(':visible').first().clear({ force: true }).type(email, { force: true })
-    cy.get('input[name="password"]').filter(':visible').first().clear({ force: true }).type(password, { force: true })
+    cy.get('input[name="password"]')
+    .filter(':visible')
+    .first()
+    .as('passwordInput');
+
+  cy.get('@passwordInput')
+    .clear({ force: true })
+    .type(password, { force: true });
     cy.get('button[type="submit"]').filter(':visible').click()
-    cy.wait(2000)
+    cy.wait(3000)
     cy.url().should('include', '/dashboard')
   })
 

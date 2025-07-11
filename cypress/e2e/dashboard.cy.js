@@ -1,36 +1,31 @@
-import DashboardPage from '../pages/Dashboard'
-Cypress.on('uncaught:exception', () => false)
+import DashboardData from "../pages/DashboardData";
+import DashboardPage from "../pages/DashboardPage";
 
-describe('Dashboard Element Verification', () => {
-  before(() => {
-    const env = Cypress.env('ENV')
-    const role = Cypress.env('role')
-    cy.loginWithRole(env, role)
-    
-  })
+describe("Verify Dashboard Page Role Based", () => {
+  beforeEach(() => {
+    const role = Cypress.env("role");
+    if (role === "admin") {
+      cy.log("**Logging in as ADMIN**");
+    } else if (role === "employee") {
+      cy.log("**Logging in as EMPLOYEE**");
+    } else if (role === "roleBasedEmployee") {
+      cy.log("**Logging in as ROLE-BASED EMPLOYEE**");
+    } else {
+      cy.log("**Logging in with unknown role: " + role + "**");
+    }
+    cy.loginWithRole(Cypress.env("ENV"), role);
+    // Dashboard open by default after login
+    cy.url().should("include", "/dashboard");
+  });
 
-  it('should verify key dashboard metrics and charts', () => {
-    DashboardPage.verifyDashboardElements()
-    
-  })
-  //  it('should test dashboard with each team filter', () => {
-  //   cy.visit('/dashboard');
-
-  //   // Loop through all team options
-  //   // filters.testAllDropdownOptions('Select Team', (selectedTeam) => {
-  //   //   cy.log(`Testing with team: ${selectedTeam}`);
-
-  //   //   // Click Show / Search button if needed
-  //   //   cy.contains('Show').click();
-
-  //   //   // Then check if table works correctly
-  //   //   // tableUtils.verifyPagination();
-  //   // });
+  // it("Should verify dashboard components as per role", () => {
+  //   DashboardPage.verifyDashboardUI();
+  //   cy.wait(1000);
   // });
-  // it('should verify the presence of the sidebar menu', () => {
-  //   DashboardPage.verifySidebarMenu()
-  // })
-  // it('should verify the presence of the header menu', () => {
-  //   DashboardPage.verifyHeaderMenu()
-  // })
-})
+  it("Should verify dashboard data as per role", () => {
+    DashboardData.verifyAdminDashboardData();
+    cy.wait(1000);
+  });
+
+  // Add more deep data tests later, yaha UI element/role-based checks ho gaye
+});
