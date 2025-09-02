@@ -11,11 +11,11 @@ describe('Dashboard UI Tests', () => {
     DashboardPagefile.verifyDashboardElements();
   });
 
-//   it('should verify sidebar visibility', () => {
-//     DashboardPagefile.verifySidebarMenu();
-//   });
+  it('should verify sidebar visibility', () => {
+    DashboardPagefile.verifySidebarMenu();
+  });
 
-//   it('should verify header is rendered', () => {
-//     DashboardPagefile.verifyHeaderMenu();
-//   });
+  it('should verify header is rendered', () => {
+    DashboardPagefile.verifyHeaderMenu();
+  });
 });

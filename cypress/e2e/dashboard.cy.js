@@ -18,14 +18,14 @@ describe("Verify Dashboard Page Role Based", () => {
     cy.url().should("include", "/dashboard");
   });
 
-  // it("Should verify dashboard components as per role", () => {
-  //   DashboardPage.verifyDashboardUI();
-  //   cy.wait(1000);
-  // });
-  it("Should verify dashboard data as per role", () => {
-    DashboardData.verifyAdminDashboardData();
+  it("Should verify dashboard components as per role", () => {
+    DashboardPage.verifyDashboardUI();
     cy.wait(1000);
   });
+  // it("Should verify dashboard data as per role", () => {
+  //   DashboardData.verifyAdminDashboardData();
+  //   cy.wait(1000);
+  // });
 
   // Add more deep data tests later, yaha UI element/role-based checks ho gaye
 });

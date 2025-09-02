@@ -12,6 +12,8 @@ class DashboardData {
       password: Cypress.env("live").admin.password,
     }).then((loginResp) => {
       const token = loginResp.body.data.token;
+      cy.log("The token is: " + token);
+      cy.log("✅ Token received: " + (token ? "Yes" : "No"));
 
       // Step 2: Get Employee IDs
       cy.log("👥 Step 2: Get Employee IDs from API");
