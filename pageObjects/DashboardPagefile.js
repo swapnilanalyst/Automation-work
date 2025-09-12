@@ -26,7 +26,7 @@ class DashboardPagefile {
   }
 
   verifySidebarMenu() {
-    cy.get('.sidebar-background').should('exist');
+    cy.get('.sidebar-menu').should('exist');
   }
 
   verifyHeaderMenu() {
