@@ -134,44 +134,44 @@ describe("Dashboard - default load and sections", () => {
   //     .within(() => cy.get("i.ri-refresh-line").should("exist"));
   // });
 
-  // it("Pie chart present and prints legend + values (short)", () => {
-  //   const chart = "#portfolio_donut_charts";
+  it("Pie chart present and prints legend + values (short)", () => {
+    const chart = "#portfolio_donut_charts";
 
-  //   // visible checks
-  //   cy.get(".col-md-3 > .card > :nth-child(2)").should("be.visible");
-  //   cy.get(chart).should("be.visible");
+    // visible checks
+    cy.get(".col-md-3 > .card > :nth-child(2)").should("be.visible");
+    cy.get(chart).should("be.visible");
 
-  //   // Total (center text)
-  //   cy.get(`${chart} .apexcharts-datalabel-value`)
-  //     .invoke("text")
-  //     .then((t) => cy.log(`Total Calls: ${t.trim()}`));
+    // Total (center text)
+    cy.get(`${chart} .apexcharts-datalabel-value`)
+      .invoke("text")
+      .then((t) => cy.log(`Total Calls: ${t.trim()}`));
 
-  //   // Legend labels
-  //   cy.get(`${chart} .apexcharts-legend-text`).then(($labels) => {
-  //     const labels = [...$labels].map((el) => (el.textContent || "").trim());
+    // Legend labels
+    cy.get(`${chart} .apexcharts-legend-text`).then(($labels) => {
+      const labels = [...$labels].map((el) => (el.textContent || "").trim());
 
-  //     // Slices: data:value attribute with escaped colon
-  //     cy.get(`${chart} .apexcharts-slices path[data\\:value]`).then(
-  //       ($paths) => {
-  //         const values = [...$paths].map((p) =>
-  //           Number(p.getAttribute("data:value") || 0)
-  //         );
+      // Slices: data:value attribute with escaped colon
+      cy.get(`${chart} .apexcharts-slices path[data\\:value]`).then(
+        ($paths) => {
+          const values = [...$paths].map((p) =>
+            Number(p.getAttribute("data:value") || 0)
+          );
 
-  //         labels.forEach((label, i) => cy.log(`${label}: ${values[i] ?? 0}`));
+          labels.forEach((label, i) => cy.log(`${label}: ${values[i] ?? 0}`));
 
-  //         // Optional checks
-  //         expect(labels).to.include.members([
-  //           "OUTGOING",
-  //           "INCOMING",
-  //           "MISSED",
-  //           "REJECTED",
-  //         ]); // legend set
-  //         values.forEach((v) => expect(v).to.be.gte(0)); // non-negative
-  //       }
-  //     );
+          // Optional checks
+          expect(labels).to.include.members([
+            "OUTGOING",
+            "INCOMING",
+            "MISSED",
+            "REJECTED",
+          ]); // legend set
+          values.forEach((v) => expect(v).to.be.gte(0)); // non-negative
+        }
+      );
 
-  //   });
-  // });
+    });
+  });
 
   // it("KPIs: Total Call Duration, Total Connected, Number of EmployeesFF (print values)", () => {
   //   let duration = "",
@@ -219,106 +219,106 @@ describe("Dashboard - default load and sections", () => {
   //   });
   // });
 
-  // it("Overall Calls Volumes: table with totals (also console.log)", () => {
-  //   cy.contains("h4.card-title", /^Overall Calls Volumes$/i)
-  //     .should("be.visible")
-  //     .closest(".card")
-  //     .as("overallCard");
+  it("Overall Calls Volumes: table with totals (also console.log)", () => {
+    cy.contains("h4.card-title", /^Overall Calls Volumes$/i)
+      .should("be.visible")
+      .closest(".card")
+      .as("overallCard");
 
-  //   cy.get("@overallCard").find("svg, canvas").should("exist");
+    cy.get("@overallCard").find("svg, canvas").should("exist");
 
-  //   const parsePoint = (label) => {
-  //     const m = String(label || "").match(/^(.+?),\s*([\d.]+)\./);
-  //     return m
-  //       ? { time: m[1], value: Number(m[2]) }
-  //       : { time: "N/A", value: NaN };
-  //   };
+    const parsePoint = (label) => {
+      const m = String(label || "").match(/^(.+?),\s*([\d.]+)\./);
+      return m
+        ? { time: m[1], value: Number(m[2]) }
+        : { time: "N/A", value: NaN };
+    };
 
-  //   cy.get("@overallCard").then(($card) => {
-  //     const doc = $card[0];
-  //     const q = (sel) => [...doc.querySelectorAll(sel)];
-  //     const incoming = q(".highcharts-series-0 .highcharts-point").map((p) =>
-  //       parsePoint(p.getAttribute("aria-label"))
-  //     );
-  //     const outgoing = q(".highcharts-series-1 .highcharts-point").map((p) =>
-  //       parsePoint(p.getAttribute("aria-label"))
-  //     );
-  //     const rejected = q(".highcharts-series-2 .highcharts-point").map((p) =>
-  //       parsePoint(p.getAttribute("aria-label"))
-  //     );
-  //     const missed = q(".highcharts-series-3 .highcharts-point").map((p) =>
-  //       parsePoint(p.getAttribute("aria-label"))
-  //     );
+    cy.get("@overallCard").then(($card) => {
+      const doc = $card[0];
+      const q = (sel) => [...doc.querySelectorAll(sel)];
+      const incoming = q(".highcharts-series-0 .highcharts-point").map((p) =>
+        parsePoint(p.getAttribute("aria-label"))
+      );
+      const outgoing = q(".highcharts-series-1 .highcharts-point").map((p) =>
+        parsePoint(p.getAttribute("aria-label"))
+      );
+      const rejected = q(".highcharts-series-2 .highcharts-point").map((p) =>
+        parsePoint(p.getAttribute("aria-label"))
+      );
+      const missed = q(".highcharts-series-3 .highcharts-point").map((p) =>
+        parsePoint(p.getAttribute("aria-label"))
+      );
 
-  //     const len = Math.min(
-  //       incoming.length,
-  //       outgoing.length,
-  //       rejected.length,
-  //       missed.length
-  //     );
-  //     const rows = [];
-  //     for (let i = 0; i < len; i++) {
-  //       rows.push({
-  //         time: incoming[i].time,
-  //         in: incoming[i].value,
-  //         miss: missed[i].value,
-  //         out: outgoing[i].value,
-  //         rej: rejected[i].value,
-  //       });
-  //     }
+      const len = Math.min(
+        incoming.length,
+        outgoing.length,
+        rejected.length,
+        missed.length
+      );
+      const rows = [];
+      for (let i = 0; i < len; i++) {
+        rows.push({
+          time: incoming[i].time,
+          in: incoming[i].value,
+          miss: missed[i].value,
+          out: outgoing[i].value,
+          rej: rejected[i].value,
+        });
+      }
 
-  //     // Filter bad rows and compute totals
-  //     const valid = rows.filter(
-  //       (r) =>
-  //         r.time !== "N/A" &&
-  //         Number.isFinite(r.in) &&
-  //         Number.isFinite(r.miss) &&
-  //         Number.isFinite(r.out) &&
-  //         Number.isFinite(r.rej)
-  //     );
+      // Filter bad rows and compute totals
+      const valid = rows.filter(
+        (r) =>
+          r.time !== "N/A" &&
+          Number.isFinite(r.in) &&
+          Number.isFinite(r.miss) &&
+          Number.isFinite(r.out) &&
+          Number.isFinite(r.rej)
+      );
 
-  //     const sum = (k) => valid.reduce((a, r) => a + r[k], 0);
+      const sum = (k) => valid.reduce((a, r) => a + r[k], 0);
 
-  //     // Map to display objects with full column names for console.table
-  //     const displayRows = valid.map((r) => ({
-  //       Time: r.time,
-  //       "Incoming calls": r.in,
-  //       "Missed calls": r.miss,
-  //       "Outbound calls": r.out,
-  //       "Rejected calls": r.rej,
-  //     }));
-  //     const totals = {
-  //       Time: "Total",
-  //       "Incoming calls": sum("in"),
-  //       "Missed calls": sum("miss"),
-  //       "Outbound calls": sum("out"),
-  //       "Rejected calls": sum("rej"),
-  //     };
+      // Map to display objects with full column names for console.table
+      const displayRows = valid.map((r) => ({
+        Time: r.time,
+        "Incoming calls": r.in,
+        "Missed calls": r.miss,
+        "Outbound calls": r.out,
+        "Rejected calls": r.rej,
+      }));
+      const totals = {
+        Time: "Total",
+        "Incoming calls": sum("in"),
+        "Missed calls": sum("miss"),
+        "Outbound calls": sum("out"),
+        "Rejected calls": sum("rej"),
+      };
 
-  //     // 1) Pretty console table with full headers and forced order
-  //     console.table(displayRows.concat(totals), [
-  //       "Time",
-  //       "Incoming calls",
-  //       "Missed calls",
-  //       "Outbound calls",
-  //       "Rejected calls",
-  //     ]); // custom headers and selected columns are supported by console.table [web:160][web:164][web:155]
+      // 1) Pretty console table with full headers and forced order
+      console.table(displayRows.concat(totals), [
+        "Time",
+        "Incoming calls",
+        "Missed calls",
+        "Outbound calls",
+        "Rejected calls",
+      ]); // custom headers and selected columns are supported by console.table [web:160][web:164][web:155]
 
-  //     // 2) Markdown for cy.log, same full headers and order
-  //     cy.log(
-  //       "| Time | Incoming calls | Missed calls | Outbound calls | Rejected calls |"
-  //     );
-  //     cy.log("| :--- | ---: | ---: | ---: | ---: |");
-  //     displayRows.forEach((r) => {
-  //       cy.log(
-  //         `| ${r["Time"]} | ${r["Incoming calls"]} | ${r["Missed calls"]} | ${r["Outbound calls"]} | ${r["Rejected calls"]} |`
-  //       );
-  //     });
-  //     cy.log(
-  //       `| ${totals["Time"]} | ${totals["Incoming calls"]} | ${totals["Missed calls"]} | ${totals["Outbound calls"]} | ${totals["Rejected calls"]} |`
-  //     );
-  //   });
-  // });
+      // 2) Markdown for cy.log, same full headers and order
+      cy.log(
+        "| Time | Incoming calls | Missed calls | Outbound calls | Rejected calls |"
+      );
+      cy.log("| :--- | ---: | ---: | ---: | ---: |");
+      displayRows.forEach((r) => {
+        cy.log(
+          `| ${r["Time"]} | ${r["Incoming calls"]} | ${r["Missed calls"]} | ${r["Outbound calls"]} | ${r["Rejected calls"]} |`
+        );
+      });
+      cy.log(
+        `| ${totals["Time"]} | ${totals["Incoming calls"]} | ${totals["Missed calls"]} | ${totals["Outbound calls"]} | ${totals["Rejected calls"]} |`
+      );
+    });
+  });
 
   // it("Metric cards (Top Caller/Dialer/Highest Duration/Top Answered) and print data", () => {
   //   const metrics = [
